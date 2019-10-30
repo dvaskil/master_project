@@ -30,4 +30,4 @@ ErrRate	Match
 
 Finally a simple python program `err_plt.py` plot the mapping accuracies found by `compare_mapping.sh` by error rate
 
-![Alt text](/data/graphs/human_21_and_22/output/plots/fplotfin.png "Example")
+[[https://github.com/dvaskil/master_project/plot_error_rates/examples/firstplot.png]]
