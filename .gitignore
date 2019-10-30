@@ -1,6 +1,9 @@
+
 #simread_npmap.sh#
-*.sh#
-*.sh~
-*.py~
-*.md~
-*.txt~
+#*#
+**.sh#
+**.sh~
+**.py~
+**.md~
+**.txt~
+**.log
