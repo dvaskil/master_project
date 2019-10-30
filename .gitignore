@@ -1,6 +1,7 @@
 
-#simread_npmap.sh#
+
 #*#
+.gitignore~
 **.sh#
 **.sh~
 **.py~
