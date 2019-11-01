@@ -1,39 +1,47 @@
 #!/bin/bash
 
-folder=$1
-file=()
+dir=$1
+#Test for commandline arguments
+if [ $# -eq 0 ]; then
+    printf "No arguments provided, input path to directory containing numpy alignment files (.npz): \n"
+    read -e dir
+fi
 
-: '
-Alternatively:
-for files in "$folder"/* #It will go through the files alphabetically, therefore the [1] element will always be one step after the first element.
-do
-    filelist="$(basename "$files")"
-    if [[ $filelist == *.npz ]]; then
-	file+=($filelist)
-    fi
-done
+while true; do
+    #Assigning variables
+    dirname=$(echo "$dir" | awk -F "/" '{print $(NF-2)}')
+    coverage=$(echo "$dirname" | awk -F "coverage|-" '{print $2}')
+    start_range=$(echo "$dirname" | awk -F "error|-" '{print $3}')
+    max_range=$(echo "$dirname" | awk -F "-|step" '{print $4}')
+    err_step=$(echo "$dirname" | awk -F "step" '{print $3}')
 
-coverage=$(echo "${file[0]}" | awk -F "_c|_e" '{print $2}')
-start_range=$(echo "${file[0]}" | awk -F "_e|.npz" '{print $2}')
-max_range=$(echo "${file[-1]}" | awk -F "_e|.npz" '{print $2}')
-err_step=$(echo "${file[1]}" | awk -F "_e|.npz" '{print $2}') #This works because the for loop adds the files to the array alphabetically 
-'
+    printf "\nRunning program with these parameters:\nError start:\t$start_range\nError max:\t$max_range\nError step:\t${err_step} \
+    	    \nCoverage:\t$coverage\n\nDo you want to continue?     [y/n]\nOr to use another directory? [d]\n"
+    read ynd
+    case $ynd in
+	[Yy] )	    
+	    printf "Matching mapping accuracy with increasing error rate. Coverage: $coverage\nErrRate\tMatch\n" > error_match$coverage.txt
+	    for i in $(seq $start_range $err_step $max_range)
+	    do
+		numpy_alignments get_correct_rates $dir/truth_c${coverage}_e${i} $dir/bwa_c${coverage}_e${i} | awk 'FNR == 2 {print '$i' "\t" $2}' >> error_match$coverage.txt
+	    done
+	    exit
+	    ;;
+	[Nn] )
+	    echo "EXITING PROGRAM"
+	    exit
+	    ;;
+	[Dd] )
+	    printf "Input path to directory containing numpy alignment files (.npz): \n"
+	    read -e dir
+	    continue 1 #starts over from the outmost loop (the while loop)
+	    ;;
+	* )
+	    echo "ERROR:Invalid input... try again"
+	    ;;
+    esac
 
-foldername=$(echo "$folder" | awk -F "/" '{print $(NF-2)}')
-echo $foldername
-
-coverage=$(echo "$foldername" | awk -F "coverage|-" '{print $2}')
-start_range=$(echo "$foldername" | awk -F "error|-" '{print $3}')
-max_range=$(echo "$foldername" | awk -F "-|step" '{print $4}')
-err_step=$(echo "$foldername" | awk -F "step" '{print $3}')
-
-printf "Matching mapping accuracy with increasing error rate. Coverage: $coverage\nErrRate\tMatch\n" > error_match$coverage.txt
-
-for i in $(seq $start_range $err_step $max_range)
-do
-    numpy_alignments get_correct_rates $folder/truth_c${coverage}_e${i} $folder/bwa_c${coverage}_e${i} | awk 'FNR == 2 {print '$i' "\t" $2}' >> error_match$coverage.txt
-done
-
-#Print rates on screen
+    #Print rates on screen
 clear
 cat error_match$coverage.txt
+done
