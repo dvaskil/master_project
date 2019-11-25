@@ -15,13 +15,14 @@ while true; do
     max_range=$(echo "$simdir" | awk -F "-|step" '{print $2}')
     err_steptmp=$(echo "$simdir" | awk -F "step" '{print $2}')
     err_step=$(echo "$err_steptmp" | awk -F "/" '{print $1}')
-    outfile=/data/graphs/human_21_and_22/output/vg_graph/mapping_accuracy/vgmap_e${start_range}-${max_range}_c$coverage.tsv
 
     #Setting directory names and path
     dirnametmp="coverage"$(echo "$simdir" | awk -F "coverage" '{print $2}')
     dirname=$(echo "$dirnametmp" | awk -F "/" '{print $1}')
-    aligndir=/data/graphs/human_21_and_22/output/vg_graph/np_align/$dirname
-    posdir=/data/graphs/human_21_and_22/output/vg_graph/positions/$dirname
+    aligndir=~/data/graphs/human_21_and_22/output/vg_graph/np_align/$dirname
+    posdir=~/data/graphs/human_21_and_22/output/vg_graph/positions/$dirname
+    outfolder=~/data/human_21_and_22/output/bwa/mapping_accuracy
+    outfile=$outfolder/vgmap_e${start_range}-${max_range}_c$coverage.tsv
     
     printf "\nRunning program with these parameters:\nError start:\t$start_range\nError max:\t$max_range\nError step:\t${err_step} \
     	    \nCoverage:\t$coverage\n\nDo you want to continue?     [y/n]\nOr to use another directory? [d]\n"

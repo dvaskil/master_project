@@ -16,7 +16,7 @@ while true; do
     coverage=$(awk 'FNR == 4 {print $2}' $infile)
 
     dirname="coverage${coverage}_error${start_range}-${max_range}step${error_step}"
-    simdir=/data/graphs/human_21_and_22/output/simulated_reads/$dirname
+    simdir=~/data/human_21_and_22/output/simulated_reads/$dirname
     infilen=$(echo "$infile" | awk -F "/" '{print $(NF)}') 
     printf "\nRun with these parameters\nError start:\t$start_range\nError max:\t$max_range\nError step:\t${error_step}\nCoverage:\t$coverage\n \
        	    \nDo you want to continue? [y/n] Or do you want to use another file [f]\n"

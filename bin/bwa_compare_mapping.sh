@@ -15,18 +15,20 @@ while true; do
     max_range=$(echo "$simdir" | awk -F "-|step" '{print $2}')
     err_steptmp=$(echo "$simdir" | awk -F "step" '{print $2}')
     err_step=$(echo "$err_steptmp" | awk -F "/" '{print $1}')
-    outfile=/data/graphs/human_21_and_22/output/bwa/mapping_accuracy/bwamap_e${start_range}-${max_range}_c$coverage.tsv
 
     #Setting directory names and path
     dirnametmp="coverage"$(echo "$simdir" | awk -F "coverage" '{print $2}')
     dirname=$(echo "$dirnametmp" | awk -F "/" '{print $1}')
-    aligndir=/data/graphs/human_21_and_22/output/bwa/np_align/$dirname
+    aligndir=~/data/human_21_and_22/output/bwa/np_align/$dirname
+    outfolder=~/data/human_21_and_22/output/bwa/mapping_accuracy
+    outfile=$outfolder/bwamap_e${start_range}-${max_range}_c$coverage.tsv
 
     printf "\nRunning program with these parameters:\nError start:\t$start_range\nError max:\t$max_range\nError step:\t${err_step} \
     	    \nCoverage:\t$coverage\n\nDo you want to continue?     [y/n]\nOr to use another directory? [d]\n"
     read ynd
     case $ynd in
 	[Yy] )
+	    mkdir -p $outfolder
 	    mkdir -p $aligndir
 	    printf "Matching mapping accuracy with increasing error rate. Coverage: $coverage\nErrRate\tMatch\n" > $outfile
 	    for i in $(seq $start_range $err_step $max_range)
@@ -40,7 +42,7 @@ while true; do
 		printf "\nSTORING TRUTH\n\n"
 		cat $simdir/positions_c${coverage}_e${i}.tsv | numpy_alignments store truth $aligndir/truth_c${coverage}_e${i} $reads
 		printf "\nGETTING CORRECT RATES\n"
-		numpy_alignments get_correct_rates $aligndir/truth_c${coverage}_e${i} $aligndir/bwa_c${coverage}_e${i} | awk 'FNR == 2 {print '$i' "\t" $2}' >> $outfile
+		numpy_alignments get_correct_rates $aligndir/truth_c${coverage}_e${i} $aligndir/bwa_c${coverage}_e${i} | awk 'FNR == 1 {print '$i' "\t" $2}' >> $outfile
 	    done
 	    printf "\nDONE!\n\n"
 	    exit
