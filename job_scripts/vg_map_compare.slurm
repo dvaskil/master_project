@@ -1,0 +1,61 @@
+#!/bin/bash
+
+# Job name:
+#SBATCH --job-name=vg_map_and_compare
+#
+# Project:
+#SBATCH --account=nn9383k
+#
+# Wall time limit:
+#SBATCH --time=00-00:37:00
+#
+# Other parameters:
+#SBATCH --nodes=1 --ntasks=1 --cpus-per-task=8
+#SBATCH --mem-per-cpu=7G
+
+## Set up job environment:
+set -o errexit  # Exit the script on any error
+set -o nounset  # Treat any unset variables as an error
+       
+source $HOME/install/graphenv/bin/activate
+export PATH=$PATH:$HOME/install/bin
+
+## Modules
+module --quiet purge  # Reset the modules to the system default
+module load OpenMPI/3.1.1-gcccuda-2018b 
+module load Python/3.6.6-fosscuda-2018b
+
+## User defined parameters:
+# Variables
+coverage=0.1
+err=0.00
+# Directory with vg graphs files
+
+graphdir=graphs_0.0001
+#graphdir=graphs_0.00025
+#graphdir=graphs_0.0005
+#graphdir=graphs_0.001
+#graphdir=graphs_0.005
+#graphdir=graphs_0.01
+#graphdir=graphs_0.025
+#graphdir=graphs_0.05
+#graphdir=graphs_0.1
+#graphdir=graphs_0.2
+#graphdir=graphs_0.5
+
+
+## Prepare input files
+workdir=$USERWORK/$graphdir
+filename=_c${coverage}_e${err}
+simread=$USERWORK/simulated_readsNoXY/simulated_reads$filename.fa
+simposi=$USERWORK/simulated_readsNoXY/positions$filename.tsv
+
+cd $workdir
+
+## Make sure output is copied back after job finishes
+## Using wildcard - must use quotes!!
+## savefile is automatically in $SCRATCH
+savefile 'graphs_*.tsv'
+
+## Do some work:
+srun $HOME/project/job_scripts/vg_map_compare.sh $coverage $err $simread $simposi $SCRATCH $graphdir
