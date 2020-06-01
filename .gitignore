@@ -1,0 +1,16 @@
+scripts/
+output/
+slurm/
+todel/
+old/
+
+#*#
+.gitignore~
+notes.txt
+**.sh#
+**.sh~
+**.py~
+**.md~
+**.txt~
+**.slurm~
+**.log
