@@ -3,10 +3,17 @@ output/
 slurm/
 todel/
 old/
+tmp_dirs/
+yeast/
+
+
 
 #*#
 .gitignore~
 notes.txt
+notesTODO.txt
+
+**.vcf
 **.sh#
 **.sh~
 **.py~
