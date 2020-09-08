@@ -17,7 +17,7 @@
 #
 # Other parameters:
 #SBATCH --mem-per-cpu=500M
-#SBATCH --ntasks=76  ## Equal to len(chromosome.txt)*2
+#SBATCH --ntasks=10  ## Equal to len(chromosome.txt)*2
 
 ## Set up job environment:
 set -o errexit  # Exit the script on any error
@@ -33,12 +33,12 @@ source ~/install/graphenv/bin/activate
 
 
 ## Prepare input files
-sampledir=1622_novg
-workdir=/cluster/projects/nn9383k/eskil/arabidopsis/simulation_data/$sampledir
+sampledir=801
+workdir=/cluster/projects/nn9383k/eskil/arabidopsis2/simulation_data/$sampledir
 cd $workdir
 
-individual_vcf="variant_Boxer01_numeric.vcf.gz"
-linear_ref_fasta="../canFam3.1_numeric_trX.fa"
+individual_vcf="variant_${sampledir}.vcf.gz"
+linear_ref_fasta="../ref_TAIR10_chr1-5.fa"
 
 ## Do
 while IFS= read -r chromosome; do

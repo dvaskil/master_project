@@ -7,7 +7,7 @@
 #SBATCH --account=nn9383k
 #
 # Wall time limit:
-#SBATCH --time=00-01:08:00
+#SBATCH --time=00-00:08:00
 ### c0.2=7min
 ### c1 = 45min?
 #
@@ -37,14 +37,14 @@ export PATH=$PATH:$HOME/install/bin
 savefile 'positions_*.tsv' 'simulated_reads_*.fa'
 
 ## User defined parameters:
-coverage=1.0
-err=0.00
-id=1622
+coverage=0.1
+err=0.01
+id=9095
 
 ## Prepare input files
-workdir=/cluster/projects/nn9383k/eskil/arabidopsis/simulation_data/$id
+workdir=/cluster/projects/nn9383k/eskil/arabidopsis2/simulation_data/$id
 cd $workdir
-file="haplotypes.txt"
+file=../haplotypes.txt
 
 ## Code:
 printf "\nRUNNING SIM\n"
