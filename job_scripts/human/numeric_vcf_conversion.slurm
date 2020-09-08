@@ -1,13 +1,16 @@
 #!/bin/bash
 
+# Description: 
+# Files downloaded from GIAB have #CHROM column as 'chrN'. This script converts the denomination to numerical.
+#
 # Job name:
-#SBATCH --job-name=hg_num_vcf
+#SBATCH --job-name=num_vcf
 #
 # Project:
 #SBATCH --account=nn9383k
 #
 # Wall time limit:
-#SBATCH --time=00-00:15:00
+#SBATCH --time=00-01:10:00
 #
 # Output location and filename:
 #SBATCH --output=/cluster/home/eskilve/project/slurm/%j_%x.out
@@ -24,25 +27,25 @@ module --quiet purge  # Reset the modules to the system default
 module load BCFtools/1.9-intel-2018b
 
 ## Parameters
-sample=hg007
-zip_file=${sample}_hg38_GIAB.vcf.gz
+zip_file=hg001_hg38_GIAB_chr1-X.vcf.gz
 vcf_file=${zip_file%.gz}
 num_name=${vcf_file%.vcf}_numeric.vcf
 
 ## Prepare input files
-workdir=/cluster/projects/nn9383k/eskil/hg38/simulation_data/$sample
+workdir=/cluster/projects/nn9383k/eskil/hg38/simulation_data/hg001
 cd $workdir
 
 ## BEGIN
 printf "\nUnzipping\n"
 bgzip -d $zip_file
 
+printf "\nRemoving chromosome X\n"
+sed -i '/^chrX/,$d' $vcf_file
+
 printf "\nConverting to numerical\n"
 srun awk '{gsub(/^chr/,""); print}' $vcf_file > $num_name
+rm $vcf_file
 
 printf "\nZipping\n"
 bgzip $num_name
 
-tabix -p vcf ${num_name}.gz
-
-rm $vcf_file
