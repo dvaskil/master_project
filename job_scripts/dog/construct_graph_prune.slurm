@@ -10,17 +10,19 @@
 #SBATCH --partition=bigmem
 #
 # Wall time limit:
-#SBATCH --time=00-06:00:00
+#SBATCH --time=00-02:00:00
 #
 # Output location and filename:
 #SBATCH --output=/cluster/home/eskilve/project/slurm/%j_%x.out
 #
 # Other parameters:
 #SBATCH --ntasks=1 --cpus-per-task=7
-#SBATCH --mem-per-cpu=40G
+#SBATCH --mem-per-cpu=15G
 
-## < 01:40:00
-## 40G ON 0-6  ~~~  15G 7-10
+## Times and memory on graphs ##
+## 40G and 5 hours on [0-4]
+## 20G and 2 hours on [5-6]
+## 15G and 2 hours on [7-10]
 
 ## Set up job environment:
 set -o errexit  # Exit the script on any error
@@ -34,16 +36,16 @@ module --quiet purge  # Reset the modules to the system default
 module load BCFtools/1.9-intel-2018b
 
 # Parameters: 
-#        0      1       2     3     4     5    6     7   8   9  10
-list="0.0001 0.00025 0.0005 0.001 0.005 0.01 0.025 0.05 0.1 0.2 0.5"
+#        0      1       2     3     4     5    6     7   8   9  10   11   12   13
+list="0.0001 0.00025 0.0005 0.001 0.005 0.01 0.025 0.05 0.1 0.2 0.5 0.75 0.90 1.0"
 arr=($list)
-threshold=${arr[6]}
+threshold=${arr[13]}
 
 chromosomes="1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38"
 
 # Setting up work environment: 
 #Make a directory for this graph, go to that directory
-workdir=/cluster/work/users/eskilve/dog
+workdir=/cluster/projects/nn9383k/eskil/dog
 cd $workdir
 mkdir $SCRATCH/xg_tmp
 mkdir -p graphs_$threshold 
@@ -53,7 +55,7 @@ printf "\nCreating graph for $threshold threshold\n\n"
 
 ## VCF
 echo "Creating vcf"
-bcftools view -q $threshold $workdir/all_without_genotype_info_numeric.vcf.gz -O z > filtered.vcf.gz
+bcftools view -q $threshold $workdir/dog_cut_GT_numeric.vcf.gz -O z > filtered.vcf.gz
 tabix -p vcf filtered.vcf.gz
 echo "Done creating vcf"
 

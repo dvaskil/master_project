@@ -7,7 +7,7 @@
 #SBATCH --account=nn9383k
 #
 # Wall time limit: 
-#SBATCH --time=00-12:23:00
+#SBATCH --time=00-01:00:00
 #
 ###arabidopsis 13min
 ###Dog 2 min
@@ -31,13 +31,16 @@ module load OpenMPI/3.1.1-gcccuda-2018b
 export PATH=$PATH:$HOME/install/bin
 source ~/install/graphenv/bin/activate
 
+## BEGIN
+#Parameters
+sample_id=spanishwaterdog01
 
-## Prepare input files
-workdir=/cluster/work/users/eskilve/dog/simulation_data/boxer01
+# Static
+workdir=/cluster/projects/nn9383k/eskil/dog/simulation_data/$sample_id
 cd $workdir
 
-individual_vcf="variant_Boxer01_numeric.vcf.gz"
-linear_ref_fasta="../canFam3.1_numeric_trX.fa"
+individual_vcf="variant_${sample_id}_numeric_trX.vcf.gz"
+linear_ref_fasta="../../canFam3.1_numeric_trX.fa"
 
 ## Do
 while IFS= read -r chromosome; do
