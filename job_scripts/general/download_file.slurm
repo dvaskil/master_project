@@ -1,12 +1,15 @@
 #!/bin/bash
 
+# Description: 
+# Script used for longer downloads of various things
+#
 # Job name:
 #SBATCH --job-name=download
 #
 # Project:
 #SBATCH --account=nn9383k
 #
-# Wall time limit: ### Only toook 37 min!
+# Wall time limit:
 #SBATCH --time=00-01:01:00
 #
 # Output location and filename:
@@ -24,7 +27,7 @@ set -o nounset  # Treat any unset variables as an error
 module --quiet purge  # Reset the modules to the system default
 
 ## Prepare input files
-workdir=/cluster/projects/nn9383k/ivar
+workdir=/cluster/projects/nn9383k/eskil
 cd $workdir
 
 ## Copying file
