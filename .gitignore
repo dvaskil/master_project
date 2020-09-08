@@ -1,6 +1,7 @@
 scripts/
 output/
 slurm/
+test/
 todel/
 old/
 tmp_dirs/
@@ -12,6 +13,7 @@ yeast/
 .gitignore~
 notes.txt
 notesTODO.txt
+ml_vg_map_compare.slurm
 
 **.vcf
 **.sh#
