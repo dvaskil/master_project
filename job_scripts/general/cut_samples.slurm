@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Description: 
+# Cutting samples out of vcf for arabidopsis and dog.
+#
 # Job name:
 #SBATCH --job-name=cut_samples_vcf
 #
@@ -9,8 +12,9 @@
 # Wall time limit:
 #SBATCH --time=00-13:10:00
 #
-## Note: Lasted 2t50min
-## Dog 11t
+## Run times: 
+## Arabidopis: 2t50min
+## Dog: 11t
 #
 # Output location and filename:
 #SBATCH --output=/cluster/home/eskilve/project/slurm/%j_%x.out
@@ -29,16 +33,9 @@ set -o nounset  # Treat any unset variables as an error
 module --quiet purge  # Reset the modules to the system default
 module load BCFtools/1.9-foss-2018b
 
-## Prepare input files
-workdir=/cluster/projects/nn9383k/eskil/dog/raw_files
+## Parameters
+workdir=/cluster/projects/nn9383k/eskil/arabidopsis/data_files/vcfs
 cd $workdir
 
-## Input parameters
-#sample="Pug01,Wolf05,Boxer01"
-#vcf_file=all.vcf.gz
-
-## Do:
-#bcftools view -s ^Pug01,Wolf05,Boxer01 all.vcf.gz | bcftools view -q 0.000001 -Oz | cut -f 1-9 > all_without_genotype_info.vcf.gz ##Made decrepid .gz
-
-bcftools view -s ^Pug01,Wolf05,Boxer01 all.vcf.gz | bcftools view -q 0.000001 | cut -f 1-9 | bgzip > all_without_genotype_info.vcf.gz # Worked
-
+## BEGIN:
+bcftools view -s ^801,1622,2081,6020,9095 1001genomes_snp-short-indel_with_tair10_only_ACGTN.vcf.gz | bcftools view -q 0.000001 | cut -f 1-9 | bgzip > ar_cut_GT.vcf.gz
